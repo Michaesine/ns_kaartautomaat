@@ -79,7 +79,7 @@ def opvragen_Vertrek_Informatie():
         stationafk = stationdict[input]
         # Roep de functie aan die de departures returned
         deps = opvragen_departures(stationafk)
-        # Lijst van departured begint op 0 en word incremented met 1 elke loop
+        # Lijst van departures begint op 0 en word incremented met 1 elke loop
         num = 0
         # Plek van de values, word ook incremented met 30 px elke loop
         y = 80
