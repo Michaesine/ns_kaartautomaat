@@ -71,65 +71,73 @@ def opvragen_departures(stationsverkorting):
     return departurelst
 
 
-def opvragen_vertrek_informatie():
+def check_input():
     # Pak de invoer van de textbox
+    global invoer
     invoer = textbox.get()
     # Als de invoer in de textbox niet in deze dict staat, krijg een error message (showinfo)
     if invoer not in stationdict:
         showinfo(title='Foutmelding', message="Dit station bestaat niet.")
     else:
         # Als de invoer wel bestaat in de dict
-        # Verander de invoer (stationsnaam) naar de afkorting van desbetreffend station
-        stationafk = stationdict[invoer]
-        # Roep de functie aan die de departures returned
-        deps = opvragen_departures(stationafk)
-        # Lijst van departures begint op 0 en word incremented met 1 elke loop
-        num = 0
-        # Plek van de values, word ook incremented met 30 px elke loop
-        y = 80
-        # Defineer de headers voor de lijst:
-        headers = ('{:10} | {:25} | {:10} | {:20} |'.format('Vertrektijd', 'Eind Station', 'Spoor', 'Materieel'))
-        # De cover die de value van de laatste query bedekt
-        # De enige oplossing die werkte
-        coverlabel = Label(bg='#003082')
-        coverlabel.place(x=390, height=900, y=10, width=1010)
-        # De naam aan de bovenkant van de GUI, voor duidelijkheid over welk station het gaat
-        naamlabel = Label(bg='#FFC917', text=f"Actuele vertrekken vanaf station {invoer}",
-                          font=("Lucida Console", 20, "underline", "bold"))
-        naamlabel['font'] = myFont
-        # De headers van elke value
-        headerlabel = Label(bg='#FFC917', text=headers, font=("Lucida Console", 20, "underline", "bold"))
-        headerlabel['font'] = myFont
-        # Plaats de labels op de window
-        naamlabel.place(x=400, y=50)
-        headerlabel.place(x=400, y=80)
-        # De loop die alle json values aan variabels koppelt
-        for i in deps:
-            direction = deps[num]["direction"]
-            actualdatetime = deps[num]["actualDateTime"]
-            actualdatetime = actualdatetime.split("T")[1]
-            actualdatetime = actualdatetime.split("+")[0]
-            plannedtrack = deps[num]["plannedTrack"]
-            shortcategoryname = deps[num]["product"]["shortCategoryName"]
-            cancelled = deps[num]["cancelled"]
-            # In plaats van 0 en 1, worden nee en ja geprint
-            if cancelled == 0:
-                cancelled = "Nee"
-            elif cancelled == 1:
-                cancelled = "Ja"
-            # Increment num met 1
-            num += 1
-            # Defineer de values aan de headers
-            values = (
-                ' {:10} | {:25} | {:10} | {:20} |'.format(actualdatetime, direction, plannedtrack, shortcategoryname
-                                                          ))
-            # Increment de y met 30 elke loop
-            y += 30
-            # Valuelabel die de values plaatst op de GUI
-            valuelabel = Label(text=values, bg='#FFC917')
-            valuelabel['font'] = myFont
-            valuelabel.place(x=400, y=y)
-    return deps
+        opvragen_vertrek_informatie(invoer)
+
+
+def opvragen_vertrek_informatie(invoer):
+    # Verander de invoer (stationsnaam) naar de afkorting van desbetreffend stationstationafk = stationdict[invoer]
+    stationafk = stationdict[invoer]
+    # Roep de functie aan die de departures returned
+    deps = opvragen_departures(stationafk)
+    plaatsinfo(deps)
+
+
+def plaatsinfo(deps):
+    # Lijst van departures begint op 0 en word incremented met 1 elke loop
+    num = 0
+    # Plek van de values, word ook incremented met 30 px elke loop
+    y = 80
+    # Defineer de headers voor de lijst:
+    headers = ('{:10} | {:25} | {:10} | {:20} |'.format('Vertrektijd', 'Eind Station', 'Spoor', 'Materieel'))
+    # De cover die de value van de laatste query bedekt
+    # De enige oplossing die werkte
+    coverlabel = Label(bg='#003082')
+    coverlabel.place(x=390, height=900, y=10, width=1010)
+    # De naam aan de bovenkant van de GUI, voor duidelijkheid over welk station het gaat
+    naamlabel = Label(bg='#FFC917', text=f"Actuele vertrekken vanaf station {invoer}",
+                      font=("Lucida Console", 20, "underline", "bold"))
+    naamlabel['font'] = myFont
+    # De headers van elke value
+    headerlabel = Label(bg='#FFC917', text=headers, font=("Lucida Console", 20, "underline", "bold"))
+    headerlabel['font'] = myFont
+    # Plaats de labels op de window
+    naamlabel.place(x=400, y=50)
+    headerlabel.place(x=400, y=80)
+    # De loop die alle json values aan variabels koppelt
+    for i in deps:
+        direction = deps[num]["direction"]
+        actualdatetime = deps[num]["actualDateTime"]
+        actualdatetime = actualdatetime.split("T")[1]
+        actualdatetime = actualdatetime.split("+")[0]
+        plannedtrack = deps[num]["plannedTrack"]
+        shortcategoryname = deps[num]["product"]["shortCategoryName"]
+        cancelled = deps[num]["cancelled"]
+        # In plaats van 0 en 1, worden nee en ja geprint
+        if cancelled == 0:
+            cancelled = "Nee"
+        elif cancelled == 1:
+            cancelled = "Ja"
+        # Increment num met 1
+        num += 1
+        # Defineer de values aan de headers
+        values = (
+            ' {:10} | {:25} | {:10} | {:20} |'.format(actualdatetime, direction, plannedtrack, shortcategoryname
+                                                      ))
+        # Increment de y met 30 elke loop
+        y += 30
+        # Valuelabel die de values plaatst op de GUI
+        valuelabel = Label(text=values, bg='#FFC917')
+        valuelabel['font'] = myFont
+        valuelabel.place(x=400, y=y)
 
 
 # Import alle modules die gebruikt worden in de code, en print een foutmelding als dat niet lukt
@@ -168,37 +176,15 @@ RS.pack(fill='x', side=RIGHT)
 # Blauw label als scheiding
 SS = Label(master, bg="#003082", width=1, height=1400, text='')
 SS.place(x=400)
-
-# Voor elke value in de API call uit opvragen_stationslijst(), stop de lang (Meest complete stationsnaam) en de code
-# (afkorting) in een dict
-
-stationdict = {}
-stationlist = []
-for i in opvragen_stationslijst():
-    stationdict[i["namen"]["lang"]] = i["code"]
-    stationlist.append(i["namen"]["lang"])
-    print(i["namen"]["lang"])
-opvragen_stationslijst()
-
 # Plaats het NS logo
 nsLogoCanvas = Canvas(master, bd=0, highlightthickness=0, bg='#FFC917', width=370, height=143)
 nsLogoCanvas.place(x=14, y=60)
 nsLogoImg = PhotoImage(file='./ns.png')
 nsLogoCanvas.create_image(0, 0, anchor='nw', image=nsLogoImg)
-
-# Textbox & Button ander station opvragen
-textbox = Entry(justify=CENTER)
-textbox.insert(0, 'Utrecht Centraal', )
-textbox.place(x=125, y=750, width=150, )
-
-button = Button(master, text="Haal informatie op", command=opvragen_vertrek_informatie)
-button.place(x=125, y=775, width=150)
-
-# Datum van vandaag, word gebruikt in de GUI later
+# Datum van vandaag, word gebruikt in de GUI
 timeAndDate = datetime.datetime.now()
 date = timeAndDate.strftime("%d-%m-%Y ")
 time = timeAndDate.strftime("%H:%M")
-
 # Post stationsnaam, datum, en tijd
 stationsNaamLabel = Label(master, bg='#FFC917', fg='#003082', font=('Helvetic', 16, 'bold', 'italic'),
                           text='Welkom op station Utrecht Centraal')
@@ -206,6 +192,22 @@ stationsNaamLabel.place(x=20, y=230)
 datumLabel = Label(master, bg='#FFC917', fg='#003082', font=('Helvetic', 16, 'bold', 'italic'), text=date)
 tijdLabel = Label(master, bg='#FFC917', fg='#003082', font=('Lucida Console', 50, 'bold'), text=time)
 tijdLabel.place(x=100, y=300)
+
+# Voor elke value in de API call uit opvragen_stationslijst(), stop de lang (Meest complete stationsnaam) en de code
+# (afkorting) in een dict
+
+stationdict = {}
+for i in opvragen_stationslijst():
+    stationdict[i["namen"]["lang"]] = i["code"]
+opvragen_stationslijst()
+
+# Textbox & Button ander station opvragen
+textbox = Entry(justify=CENTER)
+textbox.insert(0, 'Utrecht Centraal', )
+textbox.place(x=125, y=750, width=150, )
+
+button = Button(master, text="Haal informatie op", command=check_input)
+button.place(x=125, y=775, width=150)
 
 # Loop van de master window
 master.mainloop()
