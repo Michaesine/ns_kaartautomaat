@@ -134,13 +134,12 @@ def opvragen_vertrek_informatie():
 
 # Import alle modules die gebruikt worden in de code, en print een foutmelding als dat niet lukt
 try:
-    import tkinter as tk
     import datetime
     from tkinter import *
     import json
     from tkinter.messagebox import showinfo
     import tkinter.font as font
-except:
+except ImportError:
     print("Kan een of meerdere modules niet importeren.")
 # Open de master window
 master = Tk()
