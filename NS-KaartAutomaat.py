@@ -90,6 +90,7 @@ def opvragen_vertrek_informatie():
         # Defineer de headers voor de lijst:
         headers = ('{:10} | {:25} | {:10} | {:20} |'.format('Vertrektijd', 'Eind Station', 'Spoor', 'Materieel'))
         # De cover die de value van de laatste query bedekt
+        # De enige oplossing die werkte
         coverlabel = Label(bg='#003082')
         coverlabel.place(x=390, height=900, y=10, width=1010)
         # De naam aan de bovenkant van de GUI, voor duidelijkheid over welk station het gaat
@@ -133,6 +134,7 @@ def opvragen_vertrek_informatie():
 
 # Import alle modules die gebruikt worden in de code, en print een foutmelding als dat niet lukt
 try:
+    import tkinter as tk
     import datetime
     from tkinter import *
     import json
@@ -172,8 +174,11 @@ SS.place(x=400)
 # (afkorting) in een dict
 
 stationdict = {}
+stationlist = []
 for i in opvragen_stationslijst():
     stationdict[i["namen"]["lang"]] = i["code"]
+    stationlist.append(i["namen"]["lang"])
+    print(i["namen"]["lang"])
 opvragen_stationslijst()
 
 # Plaats het NS logo
@@ -186,6 +191,7 @@ nsLogoCanvas.create_image(0, 0, anchor='nw', image=nsLogoImg)
 textbox = Entry(justify=CENTER)
 textbox.insert(0, 'Utrecht Centraal', )
 textbox.place(x=125, y=750, width=150, )
+
 button = Button(master, text="Haal informatie op", command=opvragen_vertrek_informatie)
 button.place(x=125, y=775, width=150)
 
