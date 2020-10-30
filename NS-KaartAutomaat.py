@@ -108,8 +108,8 @@ def plaatsinfo(deps):
     headers = ('{:10} | {:25} | {:10} | {:20} |'.format('Vertrektijd', 'Eind Station', 'Spoor', 'Materieel'))
     # De cover die de value van de laatste query bedekt
     # De enige oplossing die werkte
-    # coverlabel = Label(bg='#003082')
-    # coverlabel.place(x=390, height=900, y=10, width=1010)
+    coverlabel = Label(bg='#003082')
+    coverlabel.place(x=390, height=900, y=10, width=1010)
     # De naam aan de bovenkant van de GUI, voor duidelijkheid over welk station het gaat
     naamlabel = Label(bg='#FFC917', text=f"Actuele vertrekken vanaf station {invoer}",
                       font=("Lucida Console", 20, "underline", "bold"))
@@ -143,7 +143,7 @@ def plaatsinfo(deps):
         # Increment de y met 30 elke loop
         y += 30
         # Valuelabel die de values plaatst op de GUI
-        valuelabel = Label(text=values, bg='#FFC917')
+        valuelabel = Label(text=values, bg='#FFC917', textvariable=num)
         valuelabel['font'] = myFont
         valuelabel.place(x=400, y=y)
 
