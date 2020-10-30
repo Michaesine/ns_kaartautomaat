@@ -71,6 +71,14 @@ def opvragen_departures(stationsverkorting):
     return departurelst
 
 
+def clock():
+    time = datetime.datetime.now().strftime("%H:%M")
+    tijdLabel = Label(master, bg='#FFC917', fg='#003082', font=('Lucida Console', 50, 'bold'), text=time)
+    tijdLabel.place(x=100, y=300)
+    master.after(1000, clock)  # run itself again after 1000 ms
+    return time
+
+
 def check_input():
     # Pak de invoer van de textbox
     global invoer
@@ -100,8 +108,8 @@ def plaatsinfo(deps):
     headers = ('{:10} | {:25} | {:10} | {:20} |'.format('Vertrektijd', 'Eind Station', 'Spoor', 'Materieel'))
     # De cover die de value van de laatste query bedekt
     # De enige oplossing die werkte
-    coverlabel = Label(bg='#003082')
-    coverlabel.place(x=390, height=900, y=10, width=1010)
+    # coverlabel = Label(bg='#003082')
+    # coverlabel.place(x=390, height=900, y=10, width=1010)
     # De naam aan de bovenkant van de GUI, voor duidelijkheid over welk station het gaat
     naamlabel = Label(bg='#FFC917', text=f"Actuele vertrekken vanaf station {invoer}",
                       font=("Lucida Console", 20, "underline", "bold"))
@@ -160,7 +168,7 @@ master.geometry('1200x900')
 # Lock windows size
 master.resizable(width=False, height=False, )
 # Gele achtergrond
-master.configure(bg='#fcc63f')
+master.configure(bg='#FFC917')
 # Blauw label aan de onderkant
 ll = Label(master, bg="#003082", height=3, text='')
 ll.pack(fill='x', side=BOTTOM)
@@ -184,14 +192,13 @@ nsLogoCanvas.create_image(0, 0, anchor='nw', image=nsLogoImg)
 # Datum van vandaag, word gebruikt in de GUI
 timeAndDate = datetime.datetime.now()
 date = timeAndDate.strftime("%d-%m-%Y ")
-time = timeAndDate.strftime("%H:%M")
+time = timeAndDate.strftime("%H:%M:%S")
+time = clock()
 # Post stationsnaam, datum, en tijd
 stationsNaamLabel = Label(master, bg='#FFC917', fg='#003082', font=('Helvetic', 16, 'bold', 'italic'),
                           text='Welkom op station Utrecht Centraal')
 stationsNaamLabel.place(x=20, y=230)
 datumLabel = Label(master, bg='#FFC917', fg='#003082', font=('Helvetic', 16, 'bold', 'italic'), text=date)
-tijdLabel = Label(master, bg='#FFC917', fg='#003082', font=('Lucida Console', 50, 'bold'), text=time)
-tijdLabel.place(x=100, y=300)
 
 # Voor elke value in de API call uit opvragen_stationslijst(), stop de lang (Meest complete stationsnaam) en de code
 # (afkorting) in een dict
