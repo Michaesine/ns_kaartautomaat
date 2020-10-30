@@ -72,15 +72,15 @@ def opvragen_departures(stationsverkorting):
 
 
 def opvragen_vertrek_informatie():
-    # Pak de input van de textbox
+    # Pak de invoer van de textbox
     invoer = textbox.get()
-    # Als de input in de textbox niet in deze dict staat, krijg een error message (showinfo)
+    # Als de invoer in de textbox niet in deze dict staat, krijg een error message (showinfo)
     if invoer not in stationdict:
         showinfo(title='Foutmelding', message="Dit station bestaat niet.")
     else:
         # Als de invoer wel bestaat in de dict
         # Verander de invoer (stationsnaam) naar de afkorting van desbetreffend station
-        stationafk = stationdict[input]
+        stationafk = stationdict[invoer]
         # Roep de functie aan die de departures returned
         deps = opvragen_departures(stationafk)
         # Lijst van departures begint op 0 en word incremented met 1 elke loop
@@ -93,7 +93,7 @@ def opvragen_vertrek_informatie():
         coverlabel = Label(bg='#003082')
         coverlabel.place(x=390, height=900, y=10, width=1010)
         # De naam aan de bovenkant van de GUI, voor duidelijkheid over welk station het gaat
-        naamlabel = Label(bg='#FFC917', text=f"Actuele vertrekken vanaf station {input}",
+        naamlabel = Label(bg='#FFC917', text=f"Actuele vertrekken vanaf station {invoer}",
                           font=("Lucida Console", 20, "underline", "bold"))
         naamlabel['font'] = myFont
         # De headers van elke value
@@ -105,11 +105,11 @@ def opvragen_vertrek_informatie():
         # De loop die alle json values aan variabels koppelt
         for i in deps:
             direction = deps[num]["direction"]
-            actualdatetime = deps[num]["actualdatetime"]
+            actualdatetime = deps[num]["actualDateTime"]
             actualdatetime = actualdatetime.split("T")[1]
             actualdatetime = actualdatetime.split("+")[0]
-            plannedtrack = deps[num]["plannedtrack"]
-            shortcategoryname = deps[num]["product"]["shortcategoryname"]
+            plannedtrack = deps[num]["plannedTrack"]
+            shortcategoryname = deps[num]["product"]["shortCategoryName"]
             cancelled = deps[num]["cancelled"]
             # In plaats van 0 en 1, worden nee en ja geprint
             if cancelled == 0:
